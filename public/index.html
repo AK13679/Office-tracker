@@ -590,11 +590,15 @@
                     </div>
                     <div>
                         <label for="visit-from">From</label>
-                        <input type="time" id="visit-from" placeholder="09:00" />
+                        <select id="visit-from">
+                            <option value="">Any time</option>
+                        </select>
                     </div>
                     <div>
                         <label for="visit-to">To</label>
-                        <input type="time" id="visit-to" placeholder="18:00" />
+                        <select id="visit-to">
+                            <option value="">Any time</option>
+                        </select>
                     </div>
                     <div>
                         <label for="visit-note">Note <span
@@ -629,6 +633,29 @@
             '#C0392B', '#1A6B4A', '#1565C0', '#6A0DAD', '#C56A00',
             '#00757F', '#8B3A3A', '#2D6A00', '#7B4F00', '#004D6E'
         ];
+
+        function populateTimeDropdowns() {
+            const selects = ['visit-from', 'visit-to'];
+            const times = [];
+            for (let h = 7; h <= 21; h++) {
+                ['00', '30'].forEach(m => {
+                    const hour = h % 12 === 0 ? 12 : h % 12;
+                    const ampm = h < 12 ? 'AM' : 'PM';
+                    const display = `${hour}:${m} ${ampm}`;
+                    const value = `${String(h).padStart(2, '0')}:${m}`;
+                    times.push({ display, value });
+                });
+            }
+            selects.forEach(id => {
+                const sel = document.getElementById(id);
+                times.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.value;
+                    opt.textContent = t.display;
+                    sel.appendChild(opt);
+                });
+            });
+        }
 
         function colorForName(name) {
             let h = 0;
@@ -741,6 +768,7 @@
             // Set default date to today
             document.getElementById('visit-date').value = todayStr();
             document.getElementById('visit-date').min = todayStr();
+            populateTimeDropdowns();
             loadVisits();
         }
 
