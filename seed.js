@@ -2,7 +2,6 @@
 // Change names and PINs before running!
 // After seeding, you can delete this file or keep it private.
 
-require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const { pool, initDB } = require('./database');
 
