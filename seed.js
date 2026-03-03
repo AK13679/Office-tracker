@@ -9,7 +9,7 @@ const team = [
   { name: 'Thomas',   pin: '1111' },
   { name: 'Abhishek',     pin: '2222' },
   { name: 'Valentin',   pin: '3333' },
-//   { name: 'David',   pin: '4444' },
+  { name: 'Mehersa',   pin: '4444' },
 //   { name: 'Eva',     pin: '5555' },
 //   { name: 'Frank',   pin: '6666' },
 //   { name: 'Grace',   pin: '7777' },
