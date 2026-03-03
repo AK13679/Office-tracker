@@ -29,6 +29,8 @@ async function initDB() {
     );
 
     CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
+    ALTER TABLE visits ADD COLUMN IF NOT EXISTS time_from TIME;
+    ALTER TABLE visits ADD COLUMN IF NOT EXISTS time_to TIME;
   `);
   console.log('Database initialized');
 }

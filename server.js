@@ -76,7 +76,8 @@ app.get('/api/members', async (req, res) => {
 app.get('/api/visits', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT v.id, v.visit_date::text, v.note, m.name AS member_name, v.member_id
+      SELECT v.id, v.visit_date::text, v.note, v.time_from::text, v.time_to::text,
+             m.name AS member_name, v.member_id
       FROM visits v
       JOIN members m ON v.member_id = m.id
       WHERE v.visit_date >= CURRENT_DATE
@@ -92,15 +93,15 @@ app.get('/api/visits', async (req, res) => {
 
 // Add or update own visit
 app.post('/api/visits', requireAuth, async (req, res) => {
-  const { visit_date, note } = req.body;
+  const { visit_date, note, time_from, time_to } = req.body; // ← ADD time_from, time_to
   if (!visit_date) return res.status(400).json({ error: 'Date required' });
   try {
     await pool.query(
-      `INSERT INTO visits (member_id, visit_date, note)
-       VALUES ($1, $2, $3)
+      `INSERT INTO visits (member_id, visit_date, note, time_from, time_to)
+       VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (member_id, visit_date)
-       DO UPDATE SET note = EXCLUDED.note`,
-      [req.session.memberId, visit_date, note || '']
+       DO UPDATE SET note = EXCLUDED.note, time_from = EXCLUDED.time_from, time_to = EXCLUDED.time_to`,
+      [req.session.memberId, visit_date, note || '', time_from || null, time_to || null]
     );
     res.json({ ok: true });
   } catch (e) {
